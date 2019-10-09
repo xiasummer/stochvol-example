@@ -1,0 +1,31 @@
+library("stochvol")
+
+data <- read.csv("kous.csv", na.strings=".")
+names(data) <- c("date", "rate")
+data <- na.omit(data)
+
+# Use data after implementing flexible exchange rate system in Korea
+# This is since Dec, 1997. 
+data$date <- as.Date(data$date)
+data <- subset(data, data$date > "1997-11-30")
+
+return <- logret(data$rate, demean = TRUE)
+
+par(mfrow=c(2,1))
+plot(data, type="l")
+plot(return, type="l")
+
+mod1 <- svsample(return)
+
+summary(mod1, showlatent = FALSE)
+volplot(mod1, forecast = 30, dates = data$date[-1])
+
+
+par(mfrow = c(3, 1))
+paratraceplot(mod1)
+
+par(mfrow = c(1, 3))
+paradensplot(res, showobs = FALSE)
+
+plot(mod1, showobs = TRUE)
+plot(resid(mod1), return)
