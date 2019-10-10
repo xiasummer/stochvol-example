@@ -54,11 +54,13 @@ predict_stochvol <- function(train_size=1000, predict_length){
 }
 
 
+pred <- predict_stochvol(predict_length=120)
+
 # This is the plot1.pdf.
 pred_date <- data$date[1002:1121]
 
 ggplot() + 
-  geom_line(aes(x=pred_date, y=return[1002:1121], col="return")) + 
+  geom_line(aes(x=pred_date, y=return[1001:1120], col="return")) + 
   geom_line(aes(x=pred_date, y=pred[, 1, "y"], col="interval")) + 
   geom_line(aes(x=pred_date, y=pred[, 3, "y"], col="interval")) +  
   scale_colour_manual("", 
