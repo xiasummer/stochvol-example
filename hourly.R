@@ -47,7 +47,7 @@ pred <- predict_stochvol(predict_length=100)
 pred_time <- data$time[152:251]
 pred_time <- c(pred_time[1:87], as.POSIXct("2019-09-21 05:00:00"), pred_time[88:100])
 
-# This results in plot2.pdf. 
+# This results in png2.pdf. 
 prediction_df <- data.frame(time=pred_time, 
                             q1=c(pred[1:87, 1, "y"], NA, pred[88:100, 1, "y"]), 
                             q2=c(pred[1:87, 2, "y"], NA, pred[88:100, 2, "y"]),
