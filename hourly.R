@@ -3,6 +3,7 @@ library("ggplot2")
 
 data <- read.csv("usdjpy.csv")
 
+# Data preprocessing.
 time = matrix(NA, ncol=2, nrow=nrow(data))
 
 for (i in 1:nrow(time)){
@@ -14,6 +15,7 @@ data <- data.frame(time=as.POSIXct(strptime(paste(time[, 1], time[, 2]),
                                             format="%d.%m.%Y %H:%M:%S")), 
                    rate=data$Close) 
 
+# The following line excludes the days exchage did not open. 
 data <- data[-which(data$time <= "2019-09-09 05:00:00" | 
                     (data$time >= "2019-09-14 05:00:00" & data$time <= "2019-09-16 05:00:00") | 
                     (data$time >= "2019-09-21 05:00:00" & data$time <= "2019-09-23 05:00:00")), ]
@@ -44,17 +46,18 @@ predict_stochvol <- function(train_size=150, predict_length){
 }
 
 pred <- predict_stochvol(predict_length=100)
+# I have added a NA value so the preiod of non-activity is illustrated in the plot. 
 pred_time <- data$time[152:251]
 pred_time <- c(pred_time[1:87], as.POSIXct("2019-09-21 05:00:00"), pred_time[88:100])
 
-# This results in png2.pdf. 
 prediction_df <- data.frame(time=pred_time, 
                             q1=c(pred[1:87, 1, "y"], NA, pred[88:100, 1, "y"]), 
                             q2=c(pred[1:87, 2, "y"], NA, pred[88:100, 2, "y"]),
                             q3=c(pred[1:87, 3, "y"], NA, pred[88:100, 3, "y"]),
                             return=c(return[151:237], NA, return[238:250]))
 
-  
+
+# This results in plot2.png. 
 ggplot(data=prediction_df) + 
   geom_line(aes(x=time, y=return, col="return")) + 
   geom_line(aes(x=time, y=q1, col="interval")) + 
